@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[argc+1]) {
   struct dict_t *dict = dictionary_new(argv[2], 5e5);
+  printf("new dict made!");
   if (!strcmp(argv[1], "gen")) {
     if (dictionary_generate(dict, argv[3]) < 0) {
       printf("Error generating dictionary\n");

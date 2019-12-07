@@ -36,7 +36,6 @@ struct dict_t* dictionary_new(char *data_file, size_t num_items) {
   struct dict_t *dict = malloc(sizeof(struct dict_t) * num_items);
   dict->num_items = sizeof(num_items);
   dict->path = data_file;
-  dict->fd = dictionary_open_map(*dict)
   return dict;
 }
 
@@ -51,7 +50,7 @@ size_t dictionary_len(struct dict_t *dict) {
 // (dictionary_len), then mmap it.
 int dictionary_open_map(struct dict_t *dict) {
   int len = dictionary_len(dict);
-  int fd = open(argv[1], O_CREAT | O_RDWR | O_TRUNC, S_IRUSR);
+  int fd = open(dict->path, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR);
   if (fd == -1) {
     perror("open");
     return EXIT_FAILURE;
@@ -67,6 +66,7 @@ int dictionary_open_map(struct dict_t *dict) {
     return EXIT_FAILURE;
   }
   dict->base = base;
+  dict->fd = fd;
   return fd;
 }
 
@@ -75,8 +75,10 @@ int dictionary_open_map(struct dict_t *dict) {
 int dictionary_generate(struct dict_t *dict, char *input) {
   dictionary_open_map(dict);
   FILE *f;
-  if((f = fopen(input, "r") != NULL) {
+  f = fopen(input, "r");
+  if(f != NULL) {
     int i = 0;
+    char line[100];
     while(fgets(line, 100, f) != NULL) {
       strncpy(dict->base[i].word, line, strlen(line) - 1);
       dict->base[i].len = strlen(line) - 1;
@@ -87,7 +89,7 @@ int dictionary_generate(struct dict_t *dict, char *input) {
     return 0;
   }
   fclose(f);
-  msync(dict->base, dictionary_len(dict), MS_SYNC)
+  msync(dict->base, dictionary_len(dict), MS_SYNC);
   return 1;
 }
 
@@ -99,7 +101,7 @@ int dictionary_load(struct dict_t *dict) {
 // Unmaps the given dictionary.
 // Free/destroy the underlying dict. Does NOT delete the database file.
 void dictionary_close(struct dict_t *dict) {
-  munmap(dict->base);
+  munmap(dict->base, dictionary_len(dict));
   free(dict);
 }
 
