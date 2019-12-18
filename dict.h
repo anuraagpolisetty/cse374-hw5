@@ -13,7 +13,7 @@ struct dict_t;
 // mmaped file).
 //
 // Example usage:
-// 
+//
 //  // Create a new binary dictionary in the file 'data', make space for 100
 //  // entries.
 //  struct dict_t *dict = dictionary_new("data", 100);
@@ -31,11 +31,11 @@ struct dict_t;
 //    // Found a cat!
 //    printf("Found %s\n", cat);
 //  }
-//  
+//
 //  // How many words are 3 letters long?
 //  int threes = dictionary_equal_to(dict, 3);
 //  printf("There are %d words that are 3 letters long\n", threes);
-// 
+//
 //  // All done, close it up.
 //  dictionary_close(dict);
 //
@@ -44,7 +44,7 @@ struct dict_t;
 //
 //  struct dict_t *dict = dictionary_new("data", 100);
 //  dictionary_load(dict);
-//  
+//
 //  // Now we can find use the other methods.
 //  char *dog = dictionary_exists(dict, "dog");
 //  if (dog != NULL) {
@@ -52,10 +52,9 @@ struct dict_t;
 //  }
 //  dictionary_close(dict);
 
-
 // Allocates a new dictionary. Underlying dictionary is not initialized,
 // use dictionary_generate to generate a new dictionary.
-struct dict_t* dictionary_new(char *data_file, size_t num_items);
+struct dict_t *dictionary_new(char *data_file, size_t num_items);
 
 // Read the file at input. For each line in input, create a new dictionary
 // entry.
@@ -69,7 +68,7 @@ int dictionary_load(struct dict_t *dict);
 void dictionary_close(struct dict_t *dict);
 
 // returns pointer to word if it exists, null otherwise
-char* dictionary_exists(struct dict_t *dict, char *word);
+char *dictionary_exists(struct dict_t *dict, char *word);
 
 //// Count of words with len > n
 int dictionary_larger_than(struct dict_t *dict, size_t n);
